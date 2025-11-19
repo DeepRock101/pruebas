@@ -92,8 +92,12 @@
     margin-right: 10px;
     border-radius: 50%;
     border: 2px solid white;
+    background-color: #ffff44;
     box-shadow: 0 2px 4px var(--sombra);
 }
+
+
+
 
 .btn-reset {
     background: linear-gradient(135deg, var(--secondary), var(--accent));
@@ -154,3 +158,31 @@
         justify-content: center;
     }
 }
+
+/* PANEL DE FILTROS */
+@media (max-width: 768px) {
+
+    .hamburger-mapa {
+        display: block; /* aparece en móvil */
+    }
+
+    #filtros {
+        display: none;
+        position: absolute;
+        top: 60px; /* justo debajo del botón */
+        left: 15px;
+        width: 260px;
+        z-index: 9998;
+        background: white;
+        padding: 15px;
+        overflow-x: scroll;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    #filtros.mostrar {
+        display: block;
+    }
+}
+
+

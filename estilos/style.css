@@ -110,7 +110,7 @@ h2 {
 
 /* ENCABEZADO */
 header {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, var(--fondo), var(--secondary));
   color: white;
   padding: 1rem 2rem;
   box-shadow: 0 2px 10px var(--sombra);
@@ -234,28 +234,75 @@ footer p:last-child {
     display: none; /* solo aparece en móvil */
 }
 
-/* PANEL DE FILTROS */
-@media (max-width: 768px) {
 
-    .hamburger-mapa {
-        display: block; /* aparece en móvil */
-    }
 
-    #filtros {
-        display: none;
-        position: absolute;
-        top: 60px; /* justo debajo del botón */
-        left: 15px;
-        width: 260px;
-        z-index: 9998;
-        background: white;
-        padding: 15px;
-        overflow-x: scroll;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
 
-    #filtros.mostrar {
-        display: block;
-    }
+/* DASHBOARD DE ESTADÍSTICAS */
+#dashboard {
+    background: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.estadisticas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.tarjeta-estadistica {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.tarjeta-estadistica .numero {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.tarjeta-estadistica .label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.distribucion-categorias {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.distribucion-categorias h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.categoria-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.categoria-item:last-child {
+    border-bottom: none;
+}
+
+.categoria-nombre {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.categoria-cantidad {
+    color: #7f8c8d;
+    font-weight: bold;
 }
