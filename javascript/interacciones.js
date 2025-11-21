@@ -11,15 +11,104 @@ const textosPersonalizados = {
         "Alta Verapaz": "Esto unicamente es un prueba jajaj.",
         "Huehuetenango": "Esto unicamente es un prueba jaja",
     },
-    "Honduras": {
-        "Francisco Morazán": "Texto para Francisco Morazán, Honduras...",
-        "Cortés": "Texto para Cortés, Honduras...",
-    },
+    
+    "Municipios Guatemala": {
+    "Mixco": "Mixco es uno de los municipios más poblados...",
+    "Villa Nueva": "Villa Nueva se caracteriza por...",
+
+},
+
+    
     "El Salvador": {
         "San Salvador": "Texto para San Salvador, El Salvador...",
         "La Libertad": "Texto para La Libertad, El Salvador...",
     },
 };
+
+// Función mejorada para determinar si un punto está dentro de un polígono
+function puntoEnPoligono(point, polygons) {
+    const x = point.lat;
+    const y = point.lng;
+    
+    let inside = false;
+    
+    // Para cada polígono (puede ser multipolígono)
+    polygons.forEach(polygon => {
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i][0], yi = polygon[i][1];
+            const xj = polygon[j][0], yj = polygon[j][1];
+            
+            const intersect = ((yi > y) !== (yj > y)) &&
+                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            
+            if (intersect) inside = !inside;
+        }
+    });
+    
+    return inside;
+}
+
+// Función mejorada para contar marcadores en cada departamento/municipio
+function contarMarcadoresEnDepartamento(feature) {
+    let contador = 0;
+    
+    Object.values(marcadores).forEach((marcador) => {
+        const latlng = marcador.elemento.getLatLng();
+        const point = [latlng.lng, latlng.lat]; // [longitud, latitud] para GeoJSON
+        
+        // Verificar si el punto está en el polígono
+        if (estaPuntoEnFeature(point, feature)) {
+            contador++;
+        }
+    });
+    
+    return contador;
+}
+
+// Función para verificar si un punto está en una feature
+function estaPuntoEnFeature(point, feature) {
+    if (!feature.geometry || !feature.geometry.coordinates) return false;
+    
+    const coords = feature.geometry.coordinates;
+    const [lng, lat] = point;
+    
+    // Para Polygon
+    if (feature.geometry.type === 'Polygon') {
+        return puntoEnPoligonoCoords([lat, lng], coords);
+    }
+    // Para MultiPolygon
+    else if (feature.geometry.type === 'MultiPolygon') {
+        for (let polygon of coords) {
+            if (puntoEnPoligonoCoords([lat, lng], polygon)) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+// Función para punto en polígono con coordenadas GeoJSON
+function puntoEnPoligonoCoords(point, polygons) {
+    const x = point[0]; // lat
+    const y = point[1]; // lng
+    
+    let inside = false;
+    
+    for (let polygon of polygons) {
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i][1], yi = polygon[i][0]; // [lng, lat] -> [lat, lng]
+            const xj = polygon[j][1], yj = polygon[j][0];
+            
+            const intersect = ((yi > y) !== (yj > y)) &&
+                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            
+            if (intersect) inside = !inside;
+        }
+    }
+    
+    return inside;
+}
 
 // Inicialización del mapa, lo trabajamos con tanto con openstreedmap como con librerias de leaflet
 function inicializarMapa() {
@@ -40,14 +129,12 @@ function inicializarMarcadores() {
     // Se puede ordenar tanto por tipo como por categoria para que filtro funcione
     marcadores = {
         prueba: {
-            tipo: "marcador",
             categoria: "conservacion",
             elemento: L.marker([14.538806, -90.596888])
                 .addTo(map)
                 .bindPopup("<b>Prueba de proyecto de conservación</b><br>Solo soy una prueba <img></b> ."),
         },
         prueba2: {
-            tipo: "marcador",
             categoria: "mitigacion",
             elemento: L.marker([14.537701, -90.5919])
                 .addTo(map)
@@ -57,7 +144,6 @@ function inicializarMarcadores() {
                 style=" height: 40px; vertical-align: middle; margin-right: 4px; width: 40px;"/>`)
         },
         prueba3: {
-            tipo: "marcador",
             categoria: "mitigacion",
             elemento: L.marker([14.536173, -90.597553])
                 .addTo(map)
@@ -66,8 +152,7 @@ function inicializarMarcadores() {
               <img src="Imagenes/planeta-tierra.png"
                 style=" height: 40px; vertical-align: middle; margin-right: 4px; width: 40px;"/>`)
         },
-        prueba4: {
-            tipo: "marcador",
+        prueba4: {   
             categoria: "gestion",
             elemento: L.marker([14.533922, -90.590339])
                 .addTo(map)
@@ -77,9 +162,21 @@ function inicializarMarcadores() {
                 style=" height: 40px; vertical-align: middle; margin-right: 4px; width: 40px;"/>`)
         },
         prueba5: {
-            tipo: "marcador",
-            categoria: "prueba4",
+            categoria: "adaptacion",
             elemento: L.marker([15.561014, -90.052634])
+                .addTo(map)
+                .bindPopup("<b>Prueba3</b><br>Soy un subtexto3."),
+        },
+        prueba6: {
+            categoria: "educacion",
+            elemento: L.marker([15.616060, -91.759186])
+                .addTo(map)
+                .bindPopup("<b>Prueba3</b><br>Soy un subtexto3."),
+        },
+        prueba7: {
+            categoria: "educacion",
+            elemento: L.marker([15.027475, -91.372142
+])
                 .addTo(map)
                 .bindPopup("<b>Prueba3</b><br>Soy un subtexto3."),
         },
@@ -96,7 +193,6 @@ function inicializarMarcadores() {
     });
 
     marcadores["personalizado1"] = {
-        tipo: "marcador",
         categoria: "gestion",
         elemento: L.marker([14.540018, -90.572786], { icon: Ubicacion })
             .addTo(map)
@@ -105,8 +201,8 @@ function inicializarMarcadores() {
             ),
     };
     marcadores["personalizado2"] = {
-        tipo: "marcador",
-        categoria: "prueba4",
+    
+        categoria: "adaptacion",
         elemento: L.marker([14.539566, -90.572624], { icon: Ubicacion })
             .addTo(map)
             .bindPopup(
@@ -114,8 +210,7 @@ function inicializarMarcadores() {
             ),
     };
     marcadores["personalizado3"] = {
-        tipo: "circulo",
-        categoria: "prueba4",
+        categoria: "adaptacion",
         elemento: L.marker([14.539897, -90.573583], { icon: Ubicacion })
             .addTo(map)
             .bindPopup(
@@ -130,12 +225,12 @@ function configurarEventos() {
 
     map.on("click", onMapClick);
 
-    // La configuracion para filtros
+
     document.querySelectorAll('#filtros input[type="checkbox"]').forEach((checkbox) => {
         checkbox.addEventListener("change", aplicarFiltros);
     });
 
-    // Botón Mostrar todos, sirve para poder mostrar todos los eventos sin importanar su categoria o tipo
+    // Botón Mostrar todos, sirve para poder mostrar todos los eventos sin importanar su categoria mostrando todo
     document.getElementById("btn-reset").addEventListener("click", function () {
         document.querySelectorAll('#filtros input[type="checkbox"]').forEach((checkbox) => {
             checkbox.checked = true;
@@ -143,7 +238,7 @@ function configurarEventos() {
         aplicarFiltros();
     });
 
-    // Botón Quitar todos, sirve para quitar todos los eventos sin importar su categoria o evento
+    // Botón Quitar todos, sirve para quitar todos los eventos sin importar su categoria mostrando todo
     document.getElementById("btn-quitar-todos").addEventListener("click", function () {
         document.querySelectorAll('#filtros input[type="checkbox"]').forEach((checkbox) => {
             checkbox.checked = false;
@@ -158,45 +253,50 @@ function configurarEventos() {
     });
 }
 
-// Función para aplicar filtros
-function aplicarFiltros() {
-    const conservacion = document.getElementById("categoria-conservacion").checked;
-    const mitigacion = document.getElementById("categoria-mitigacion").checked;
-    const gestion = document.getElementById("categoria-gestion").checked;
-    const adaptacion = document.getElementById("categoria-prueba4").checked;
-    const iniciados = document.getElementById("tipo-marcador").checked;
-    const terminados = document.getElementById("tipo-marcadorR").checked;
-    const replicados = document.getElementById("tipo-circulo").checked;
 
+
+// Funición perteneciente al uso del filtro 
+function aplicarFiltros() {
+    const filtros = obtenerEstadoFiltros();
+    
     Object.keys(marcadores).forEach((key) => {
         const marcador = marcadores[key];
-        let mostrar = false;
-
-        if (marcador.tipo === "circulo") {
-            if (replicados) {
-                mostrar = true;
-            }
-        } else if (marcador.tipo === "marcador") {
-            if (
-                (marcador.categoria === "conservacion" && conservacion) ||
-                (marcador.categoria === "mitigacion" && mitigacion) ||
-                (marcador.categoria === "gestion" && gestion)
-            ) {
-                if (iniciados) {
-                    mostrar = true;
-                }
-            } else if (marcador.categoria === "prueba4" && adaptacion) {
-                if (terminados) {
-                    mostrar = true;
-                }
-            }
-        }
-        if (mostrar) {
-            map.addLayer(marcador.elemento);
-        } else {
-            map.removeLayer(marcador.elemento);
-        }
+        const mostrar = evaluarSoloCategoria(marcador, filtros);
+        actualizarVisibilidadMarcador(marcador, mostrar);
     });
+}
+
+function obtenerEstadoFiltros() {
+    return {
+        // Solo categorías de los botones
+        conservacion: document.getElementById("categoria-conservacion").checked,
+        mitigacion: document.getElementById("categoria-mitigacion").checked,
+        gestion: document.getElementById("categoria-gestion").checked,
+        adaptacion: document.getElementById("categoria-adaptacion").checked,
+        educacion: document.getElementById("categoria-educacion").checked
+    };
+}
+
+function evaluarSoloCategoria(marcador, filtros) {
+    // Mapa directo de categorías a filtros
+    const mapaCategorias = {
+        "conservacion": filtros.conservacion,
+        "mitigacion": filtros.mitigacion,
+        "gestion": filtros.gestion,
+        "adaptacion": filtros.adaptacion,
+        "educacion": filtros.educacion
+    };
+    
+    // Verificar si la categoría del marcador está activa
+    return mapaCategorias[marcador.categoria] || false;
+}
+
+function actualizarVisibilidadMarcador(marcador, mostrar) {
+    if (mostrar) {
+        map.addLayer(marcador.elemento);
+    } else {
+        map.removeLayer(marcador.elemento);
+    }
 }
 
     // Funcion para mostrar coordenadas al hacer click en el mapa, unicamente funciona en la capa donde
@@ -231,8 +331,7 @@ function highlightFeature(e) {
 
 function resetHighlight(e) {
     var layer = e.target;
-    var layerBounds = L.geoJSON(layer.feature).getBounds();
-    var cantidadMarcadores = contarMarcadoresEnDepartamento(layerBounds);
+    var cantidadMarcadores = contarMarcadoresEnDepartamento(layer.feature);
 
     layer.setStyle({
         fillColor: getColorPorMarcadores(cantidadMarcadores),
@@ -256,30 +355,19 @@ function onEachFeature(feature, layer) {
     });
 }
 
-// Función para contar marcadores en cada departamento
-function contarMarcadoresEnDepartamento(departamentoBounds) {
-    let contador = 0;
-    Object.values(marcadores).forEach((marcador) => {
-        const latlng = marcador.elemento.getLatLng();
-        if (departamentoBounds.contains(latlng)) {
-            contador++;
-        }
-    });
-    return contador;
+function getColorPorMarcadores(cantidad) {
+    return cantidad >= 15 ? "#8B0000"    // Extremo - Rojo oscuro intenso
+        : cantidad >= 12 ? "#B22222"     // Muy alto - Rojo fuego
+        : cantidad >= 9  ? "#DC143C"     // Alto - Rojo carmesí
+        : cantidad >= 7  ? "#FF4500"     // Medio-alto - Rojo naranja
+        : cantidad >= 5  ? "#FF6347"     // Medio - Rojo tomate
+        : cantidad >= 3  ? "#FF7F50"     // Moderado bajo - Rojo coral
+        : cantidad >= 1  ? "#FFA07A"     // Bajo - Rojo salmón claro
+        : "#cccccc";                     // Gris para territorios sin proyectos
 }
 
-// Función para obtener color según cantidad de marcadores que se encuentren en el mapa
-function getColorPorMarcadores(cantidad) {
-    return cantidad > 10
-        ? "#ff4444" // Rojo
-        : cantidad > 5
-        ? "#ff8844" // Naranja
-        : cantidad > 2
-        ? "#ffff44" // Amarillo
-        : cantidad > 0
-        ? "#44ff44" // Verde
-        : "#cccccc"; // Gris
-}
+
+//---------------------------------------------------------------------------------------------------------------------
 
 // Función auxiliar para crear capa GeoJSON
 function crearCapaGeoJSON(url, propiedades) {
@@ -288,12 +376,11 @@ function crearCapaGeoJSON(url, propiedades) {
         .then((data) => {
             var capa = L.geoJSON(data, {
                 style: function (feature) {
-                    const layerBounds = L.geoJSON(feature).getBounds();
-                    const cantidadMarcadores = contarMarcadoresEnDepartamento(layerBounds);
+                    const cantidadMarcadores = contarMarcadoresEnDepartamento(feature);
 
                     return {
                         fillColor: getColorPorMarcadores(cantidadMarcadores),
-                        weight: 2,
+                        weight: 3, // Aumentamos el peso para mejor visualización de bordes
                         opacity: 1,
                         color: "white",
                         dashArray: "3",
@@ -301,13 +388,12 @@ function crearCapaGeoJSON(url, propiedades) {
                     };
                 },
                 onEachFeature: function (feature, layer) {
-                    const layerBounds = L.geoJSON(feature).getBounds();
-                    const cantidadMarcadores = contarMarcadoresEnDepartamento(layerBounds);
+                    const cantidadMarcadores = contarMarcadoresEnDepartamento(feature);
 
                     // Guardar el estilo original en la capa
                     layer._originalStyle = {
                         fillColor: getColorPorMarcadores(cantidadMarcadores),
-                        weight: 2,
+                        weight: 3,
                         opacity: 1,
                         color: "white",
                         dashArray: "3",
@@ -317,23 +403,40 @@ function crearCapaGeoJSON(url, propiedades) {
                     // Obtener texto personalizado
                     const textoPersonalizado = textosPersonalizados[propiedades.pais]?.[feature.properties.name];
 
-                    // Ventana emergente con información, el mensaje se puede configutar en desde la linea 7 del codigo
-                    // esto segun cada apartado que se desee
-                    layer.bindPopup(`
-                        <div style="min-width: 200px;">
-                            <h3 style="color: #2c3e50; margin-bottom: 10px;">${feature.properties.name}</h3>
-                            <p><strong>Proyectos realizados:</strong> ${cantidadMarcadores}</p>
-                            <p><strong>País:</strong> ${propiedades.pais}</p>
+                    // Obtener nombre de la feature
+                    const nombreFeature = feature.properties.name || feature.properties.NOMBRE || 'Sin nombre';
+
+                    // Este aparatado es para la configuración de popup de marcadores 
+                    // se puede configurar los mensajes personalizados de acuerdo a la
+                    // mismas estructurua que se tiene dentro de la linea 7
+                    const popupContent = `
+                        <div style="min-width: 250px;">
+                            <h3 style="color: #2c3e50; margin-bottom: 10px; border-bottom: 2px solid #3498db; padding-bottom: 5px;">
+                                ${nombreFeature}
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                <div style="background: #e8f4fd; padding: 8px; border-radius: 5px;">
+                                    <strong>Proyectos</strong><br>
+                                    <span style="font-size: 18px; color: #2c3e50;">${cantidadMarcadores}</span>
+                                </div>
+                                <div style="background: #e8f4fd; padding: 8px; border-radius: 5px;">
+                                    <strong>Tipo</strong><br>
+                                    <span style="color: #2c3e50;">${propiedades.pais === "Municipios Guatemala" ? "Municipio" : "Departamento"}</span>
+                                </div>
+                            </div>
+                            <p style="margin: 5px 0;"><strong>País:</strong> ${propiedades.pais === "Municipios Guatemala" ? "Guatemala" : propiedades.pais}</p>
                             ${textoPersonalizado ? `
-                                <div style="margin-top: 10px; padding: 8px; background: #f0f8ff; border-left: 4px solid #3498db; border-radius: 3px;">
-                                    <p style="margin: 0; font-size: 14px; color: #2c3e50;">${textoPersonalizado}</p>
+                                <div style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                                    <p style="margin: 0; font-size: 13px; color: #856404;">
+                                        <strong>Información:</strong><br>
+                                        ${textoPersonalizado}
+                                    </p>
                                 </div>
                             ` : ""}
-                            <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 3px;">
-                                <small>Color indica cantidad de proyectos</small>
-                            </div>
                         </div>
-                    `);
+                    `;
+
+                    layer.bindPopup(popupContent);
 
                     // Mantener las interacciones
                     layer.on({
@@ -352,50 +455,61 @@ function crearCapaGeoJSON(url, propiedades) {
 
 // Cargar capas GeoJSON de esta manera sirve para solo usar la capa que deseamos ver
 function cargarCapasGeoJSON() {
-    // Definir capas base
+    // Definir capas base principal
     var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "© OpenStreetMap",
     });
 
 
+
+    // De momento esta es la idea de la segunda capa base pero, la encuentro trabajando con otro mapa
+    // y no queda cmo deseo , recuerda de querer eliminar esta capa tiene que elimianr tod lo OSMHOT
+    var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'});
+
+    
+
+
 // variables de las capas, recordatoria si se van añadir más capas es necesario que se guarde como mapa__ y diminutivo del pais
 // se puede usar de ejemplo las variables actuales. 
-// en dado caso se pueden agregar tantas capas como se deseeb
+// en dado caso se pueden agregar tantas capas como se deseed, aca usamos los que son los geojson
     var mapagt = L.layerGroup();
-    var mapahn = L.layerGroup();
-    var mapasv = L.layerGroup();
+    var mapagtm = L.layerGroup();
+   //var mapasv = L.layerGroup();
     var capaGeneralTodos = L.layerGroup();
 
-    // Cargar Guatemala
-    crearCapaGeoJSON("jsons/gt.json", { pais: "Guatemala" }).then((capaGT) => {
+    // Cargar de departamentos Guatemala
+    crearCapaGeoJSON("jsons/mapa2.gt.geojson", { pais: "Guatemala" }).then((capaGT) => {
         capaGT.addTo(mapagt);
         capaGT.addTo(capaGeneralTodos);
     });
 
-    // Cargar Honduras, recurda que ahorita la capa para hn se encuentra comentada puede ver liena 398 y 
-    //el archivo donde se extraen los datos los tienes como archivo.json, el nombre correcto es el hn.json
-    crearCapaGeoJSON("jsons/archivo.json", { pais: "Honduras" }).then((capaHN) => {
-        capaHN.addTo(mapahn);
-        capaHN.addTo(capaGeneralTodos);
+    // Cargar de municipios Guatemala - USAR "municipiosgt" es el nombre del archivo
+    crearCapaGeoJSON("jsons/municipiosgt.geojson", { pais: "Municipios Guatemala" }).then((capaMunicipios) => {
+        capaMunicipios.addTo(mapagtm);
+        capaMunicipios.addTo(capaGeneralTodos);
     });
+
 
     // Cargar El Salvador recurda que ahorita la capa para hn se encuentra comentada puede ver liena 399 y 
     //el archivo donde se extraen los datos los tienes como archivo.json, el nombre correcto es el sv.json
-    crearCapaGeoJSON("jsons/archivojson", { pais: "El Salvador" }).then((capaSV) => {
+    crearCapaGeoJSON("jsons/sv.json", { pais: "El Salvador" }).then((capaSV) => {
         capaSV.addTo(mapasv);
         capaSV.addTo(capaGeneralTodos);
     });
 
     // Definir capas para el control
     var baseLayers = {
-        "OpenStreetMap Estándar": osm,
+        "OpenStreetMap Estándar": osm,  
+        "Mapa HOT": osmHOT,
     };
 
     var overlayLayers = {
         "Todos los Países": capaGeneralTodos,
-        "Guatemala": mapagt,
-        //"Honduras": mapahn,
+        "Departentos": mapagt,
+        "Municipios": mapagtm,
         //"El Salvador": mapasv,
     };
 
@@ -408,6 +522,7 @@ function cargarCapasGeoJSON() {
 
     // Añadir las capas iniciales al mapa
     osm.addTo(map);
+    osmHOT.addTo(map);
     capaGeneralTodos.addTo(map);
 }
 
@@ -415,3 +530,8 @@ function cargarCapasGeoJSON() {
 document.addEventListener('DOMContentLoaded', function() {
     inicializarMapa();
 });
+
+
+
+
+

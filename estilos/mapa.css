@@ -160,28 +160,273 @@
 }
 
 /* PANEL DE FILTROS */
+/* MEJORAS DE DISEÑO SIN CAMBIAR ESTRUCTURA HTML */
+#filtros {
+    width: 280px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+    border-right: 1px solid #dee2e6;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-y: auto;
+}
+
+#filtros h2 {
+    margin-top: 0;
+    color: #2e7d32;
+    border-bottom: 3px solid #4caf50;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+}
+
+#filtros h2::after {
+
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.filtro-grupo {
+    margin-bottom: 2rem;
+    padding: 1.2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    
+}
+
+
+
+
+.checkbox-item {
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.checkbox-item:hover {
+    background: rgba(76, 175, 80, 0.05);
+    border-color: rgba(76, 175, 80, 0.2);
+    transform: translateX(5px);
+}
+
+.checkbox-item input {
+    margin-right: 12px;
+    transform: scale(1.3);
+    accent-color: #4caf50;
+    cursor: pointer;
+}
+
+.checkbox-item label {
+    cursor: pointer;
+    font-size: 1rem;
+    color: #495057;
+    font-weight: 500;
+    flex: 1;
+    transition: color 0.3s ease;
+}
+
+
+
+/* Botones mejorados */
+.btn-reset {
+   
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-reset::before {
+
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-reset:hover::before {
+    left: 100%;
+}
+
+.btn-reset:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-reset:active {
+    transform: translateY(-1px);
+}
+
+/* Botones específicos */
+#btn-reset {
+    background: var(--primary)
+}
+
+#btn-quitar-todos {
+    background: var(--primary)
+}
+
+#descargar {
+    background: var(--primary)
+}
+
+/* Leyenda mejorada */
+.leyenda {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+.leyenda h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+
+
+.leyenda-item:hover {
+    background: #f8f9fa;
+}
+
+.leyenda-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #cccccc;
+}
+
+.leyenda-color1 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #FFA07A;
+}
+.leyenda-color2 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #FF7F50;
+}
+.leyenda-color3 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #FF6347;
+}
+.leyenda-color4 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #FF4500;
+}
+.leyenda-color5 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #DC143C;
+}
+.leyenda-color6 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid FFEE58;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #B22222;
+}
+.leyenda-color7 {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: #8B0000;
+}
+
+/* Mejoras responsive */
 @media (max-width: 768px) {
-
-    .hamburger-mapa {
-        display: block; /* aparece en móvil */
-    }
-
     #filtros {
-        display: none;
-        position: absolute;
-        top: 60px; /* justo debajo del botón */
-        left: 15px;
-        width: 260px;
-        z-index: 9998;
-        background: white;
-        padding: 15px;
-        overflow-x: scroll;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        width: 100%;
+        padding: 1rem;
     }
+    
+    .filtro-grupo {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-reset {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+}
 
-    #filtros.mostrar {
-        display: block;
+/* Animación de entrada */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 

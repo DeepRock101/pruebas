@@ -1,120 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="imagenes/planeta-tierra.png" type="image/x-icon"> 
-    <title>GeoEscazú en Acción</title>
-    <link rel="stylesheet" href="estilos/style.css" />
-    <link rel="stylesheet" href="estilos/mapa.css" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-  </head>
-  <body>
-    <!---------------------------- ENCABEZADO ---------------------------->
-    <header>
-      <a href="index.html">
-        <button class="btn1">
-          <img
-            src="Imagenes/planeta-tierra.png"
-            style="
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="imagenes/planeta-tierra.png" type="image/x-icon">
+  <title>GeoEscazú en Acción</title>
+  <link rel="stylesheet" href="estilos/style.css" />
+  <link rel="stylesheet" href="estilos/mapa.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+  <!---------------------------- ENCABEZADO ---------------------------->
+  <header>
+    <a href="index.html">
+      <button class="btn1">
+        <img src="imagenes/planeta-tierra.png" style="
               height: 40px;
               vertical-align: middle;
               margin-right: 4px;
               width: 40px;
-            "
-          />
-          <h1>GeoEscazú</h1>
-        </button>
-      </a>
-      <nav>
-        <a href="noticias.html">NOTICIAS</a>
-        <a href="#prueba">ACERCA DE</a>
-        <a href="#bibloteca">CENTRO DE DOCUMENTACION</a>
-        <a href="#contacto">CONTACTANOS</a>
-        <a href="#Acciones">REGISTRA DE ACCIÓN</a>
-      </nav>
-    </header>
+            " />
+        <h1>GeoEscazú</h1>
+      </button>
+    </a>
+    <nav>
+      <a href="noticias.html">NOTICIAS</a>
+      <a href="#prueba">ACERCA DE</a>
+      <a href="#bibloteca">CENTRO DE DOCUMENTACION</a>
+      <a href="#contacto">CONTACTANOS</a>
+      <a href="#Acciones">REGISTRA DE ACCIÓN</a>
+    </nav>
+  </header>
 
-    <!---------------------------- FILTROS ---------------------------->
-    <div id="container">
-      <button id="btn-toggle-filtros" class="hamburger-mapa">☰</button>
-      <div id="filtros">
-        <h2>Filtros</h2>
+  <!---------------------------- FILTROS ---------------------------->
+  <div id="container">
+    <button id="btn-toggle-filtros" class="hamburger-mapa">☰</button>
+    <div id="filtros">
+      <h2>Filtros</h2>
 
-        <div class="filtro-grupo">
-          <h3>Categorías</h3>
-          <div class="checkbox-item">
-            <input type="checkbox" id="categoria-conservacion" checked />
-            <label for="categoria-conservacion">Conservación</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="categoria-mitigacion" checked />
-            <label for="categoria-mitigacion">Mitigación</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="categoria-gestion" checked />
-            <label for="categoria-gestion">Gestión</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="categoria-prueba4" checked />
-            <label for="categoria-prueba4">Adaptación</label>
-          </div>
+      <div class="filtro-grupo">
+        <h3>Categorías</h3>
+        <div class="checkbox-item">
+          <input type="checkbox" id="categoria-conservacion" checked />
+          <label for="categoria-conservacion">Conservación</label>
         </div>
-
-        <div class="filtro-grupo">
-          <h3>Estado del Proyecto</h3>
-          <div class="checkbox-item">
-            <input type="checkbox" id="tipo-marcador" checked />
-            <label for="tipo-marcador">Iniciados</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="tipo-marcadorR" checked />
-            <label for="tipo-marcadorR">Terminados</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="tipo-circulo" checked />
-            <label for="tipo-circulo">Replicados</label>
-          </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="categoria-mitigacion" checked />
+          <label for="categoria-mitigacion">Mitigación</label>
         </div>
-
-        <button class="btn-reset" id="btn-reset">Mostrar Todos</button>
-        <button class="btn-reset" id="btn-quitar-todos">Quitar Todos</button>
-        <button class="btn-reset" id="descargar">Descargar</button>
-
-        <div class="leyenda">
-          <h3>REGIONES DE GUATEMALA</h3>
-          <div class="leyenda-item">
-            <div class="leyenda-color"></div>
-            <span>Norte</span>
-          </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="categoria-gestion" checked />
+          <label for="categoria-gestion">Gestión</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="categoria-adaptacion" checked />
+          <label for="categoria-adaptacion">Adaptación</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="categoria-educacion" checked />
+          <label for="categoria-educacion">Educacion</label>
         </div>
       </div>
 
-      <div id="mapa"></div>
+      <button class="btn-reset" id="btn-reset">Mostrar Todos</button>
+      <button class="btn-reset" id="btn-quitar-todos">Quitar Todos</button>
+
+
+      <div class="leyenda">
+        <h3>NIVEL DE PROYECTOS</h3>
+        <div class="leyenda-item">
+          <div class="leyenda-color1"></div>
+          <span>Bajo</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-color2"></div>
+          <span>Medio</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-color3"></div>
+          <span>Medio-alto </span>
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-color4"></div>
+          <span>Alto</span>
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-color5"></div>
+          <span>Muy alto </span>
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-color6"></div>
+          <span>Extremo </span>
+        </div>  
+        
+      </div>
     </div>
 
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    
-    <script src="javascript/interacciones.js"></script>
+    <div id="mapa"></div>
+  </div>
 
-    <!---------------------------- PIE DE PAGINA ---------------------------->
-    <footer>
-      <p>
-        © 2025 Escazú en Acción | Plataforma ciudadana por la justicia ambiental
-      </p>
-      <p>
-        Inspirado en el Acuerdo de Escazú y en la participación ambiental
-        latinoamericana.
-      </p>
-    </footer>
-  </body>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="javascript/interacciones.js"></script>
+
+
+  <!---------------------------- PIE DE PAGINA ---------------------------->
+  <footer>
+    <p>
+      © 2025 Escazú en Acción | Plataforma ciudadana por la justicia ambiental
+    </p>
+    <p>
+      Inspirado en el Acuerdo de Escazú y en la participación ambiental
+      latinoamericana.
+    </p>
+  </footer>
+</body>
+
 </html>
